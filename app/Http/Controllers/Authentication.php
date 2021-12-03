@@ -15,7 +15,7 @@ class Authentication extends Controller
                     'email' => 'required|email|unique:users',
                     'password' => 'required|between:10,25']);
       $password = bcrypt($r->password);
-	    $api_token = Str::random(100);
+	  $api_token = Str::random(100);
       $user = User::create(['username'=>$r->username,
 							'password' =>$password,
 							'email' => $r->email,

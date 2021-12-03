@@ -13,6 +13,10 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+	  public function __construct()
+    {
+        $this->middleware('EnsureTokenIsValid');
+    }
     public function index()
     {
         //
@@ -25,12 +29,9 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-      $token = request()->bearerToken();
-      $currentUser = User::where('api_token', $token)->first();
-      if(!$currentUser)
-        return ['success' => false, 'message'=> 'you are not loggen in'];
-        $post = $currentUser->createPost($request->caption,$request->content);
-        return ['success' => true, 'message' =>$post];
+		$currentUser = getCurrentUser();
+		$post = $currentUser->createPost($request->caption,$request->content);
+		return response()->json(['success' => true, 'message' =>$post],201);
     }
 
     /**

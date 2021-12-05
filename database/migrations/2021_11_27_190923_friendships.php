@@ -16,9 +16,9 @@ class Friendships extends Migration
         Schema::create('friendships', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('sender');
-            $table->foreign('sender')->references('id')->on('users');
+            $table->foreign('sender')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('reciever');
-            $table->foreign('reciever')->references('id')->on('users');
+            $table->foreign('reciever')->references('id')->on('users')->onDelete('cascade');
 			      $table->integer('state')->default(0);
             $table->timestamps();
         });

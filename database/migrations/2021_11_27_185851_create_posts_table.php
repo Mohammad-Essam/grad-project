@@ -19,7 +19,7 @@ class CreatePostsTable extends Migration
             $table->string('content');//it will be replaced with
             //something else in the future.
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

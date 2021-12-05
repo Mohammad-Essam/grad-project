@@ -4,7 +4,8 @@ namespace App\Http\Controllers\social;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use App\Models\Post;
+use App\Models\Comment;
 class CommentController extends Controller
 {
     /**
@@ -22,9 +23,14 @@ class CommentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Post $post)
     {
-        //
+      $user = getCurrentUser();
+        $comment = Comment::create(['user_id' => $user->id,
+          'post_id' => $post->id,
+          'content' => $request->content
+      ]);
+      return $comment;
     }
 
     /**

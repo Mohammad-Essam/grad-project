@@ -5,18 +5,22 @@ namespace App\Http\Controllers\social;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Post;
+
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
 	  public function __construct()
     {
         $this->middleware('EnsureTokenIsValid');
     }
+
+		/**
+		 * Display a listing of the resource.
+		 *
+		 * @return \Illuminate\Http\Response
+		 */
+
     public function index()
     {
         $user = getCurrentUser();
@@ -37,41 +41,22 @@ class PostController extends Controller
 			$post = $currentUser->createPost($request->caption,$request->content);
 			return response()->json(['success' => true, 'message' =>$post],201);
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Post $post)
     {
-				$post = Post::find(1);
-				$post->delete();
-				return response()->json(['success' => true, 'message' =>"deleted succesfully"],201);
+				$user = getCurrentUser();
+				if($post->user == $user)
+				{
+					$post->delete();
+					return response()->json(['success' => true, 'message' =>"deleted succesfully"],201);
+				}
+				else
+				return response()->json(['success' => false, 'message' =>"cannot delete what isn't yours"]);
     }
 
     public function like(Post $post)
@@ -91,5 +76,33 @@ class PostController extends Controller
     {
       return $post->likes()->count();
     }
+
+
+
+		    /**
+		     * Display the specified resource.
+		     *
+		     * @param  int  $id
+		     * @return \Illuminate\Http\Response
+		     */
+		    public function show(Post $post)
+		    {
+		        $comments = $post->comments;
+						$NoLikes = $post->likes->count();
+						return $post;
+		    }
+
+		    // /**
+		    //  * Update the specified resource in storage.
+		    //  *
+		    //  * @param  \Illuminate\Http\Request  $request
+		    //  * @param  int  $id
+		    //  * @return \Illuminate\Http\Response
+		    //  */
+		    // public function update(Request $request, $id)
+		    // {
+		    //     //
+		    // }
+				//
 
 }

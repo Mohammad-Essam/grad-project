@@ -29,8 +29,8 @@ class Authentication extends Controller
                       'password' =>'required'
       ]);
 
-        $user = User::where('email',$r->email)->first();
-		$password = Hash::check($r->password, $user->password);
+        $user = User::where('email',$r->email)->orWhere('username',$r->email)->first();
+		    $password = Hash::check($r->password, $user->password);
 
         if($user && $password){
            $user->api_token = Str::random(100) ;

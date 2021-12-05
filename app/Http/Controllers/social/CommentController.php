@@ -12,9 +12,9 @@ class CommentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Post $post)
     {
-        //
+          return response()->json(['comments' => $post->comments]);
     }
     /**
      * Store a newly created resource in storage.

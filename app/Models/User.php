@@ -32,14 +32,20 @@ class User extends Authenticatable
     }
     public function likePost(Post $post)
     {
-      $like = Like::create(['user_id'=>$this->id,
-                        'post_id'=>$post->id]);
-        return $like;
+      $res = Like::where('user_id',$this->id)->where('post_id',$post->id)->first();
+      if(!$res)
+      {
+        $like = Like::create(['user_id'=>$this->id,'post_id'=>$post->id]);
+        return true;
+      }
+      else {
+        return false;
+      }
     }
     public function unLikePost(Post $post)
     {
       $like = Like::where('post_id',$post->id)->where('user_id',$this->id);
-      if($like)
+      if($like->first())
       {
         $like->delete();
         return true;
@@ -53,32 +59,48 @@ class User extends Authenticatable
     }
 
 //NOT eloquent relationship.
+//return users.
 //it is called as user->friends()->get();
     public function friends()
     {
-      //$sent = $this->belongsToMany(User::class, 'friendships', 'sender', 'reciever');
-      //$recieved=  $this->belongsToMany(User::class, 'friendships', 'reciever', 'sender');
-      //return $sent;
       return User::where(function($q) {
           $sent =DB::table('friendships')->where('sender', $this->id)->pluck('reciever');
           $recieved =DB::table('friendships')->where('reciever', $this->id)->pluck('sender');
           $friendsIds= $sent->merge($recieved);
           //state = 1 for accepted friend request.
-          $q->whereIn('id', $friendsIds)->where('state',0);
+          $q->whereIn('id', $friendsIds);
      });
     }
 
     public function addFriend(User $user)
     {
-        DB::table('friendships')->insert(
-            [
-            'sender' => $this->id,
-            'reciever'=>$user->id,
-            'state'=>0
-            ]
-        );
+      $isFriend = DB::table('friendships')->where('sender',$this->id)
+      ->where('reciever', $user->id)->first();
+      if(!$isFriend)
+      {
+        DB::table('friendships')->insert([
+              'sender' => $this->id,
+              'reciever'=>$user->id,
+            ]);
+        return true;
+      }
+      else {
+        return false;
+      }
     }
-
+    public function removeFriend(User $user)
+    {
+      $isFriend = DB::table('friendships')->where('sender',$this->id)
+      ->where('reciever', $user->id);
+      if($isFriend->first())
+      {
+        $isFriend->delete();
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
     public function acceptFriendRequest()
     {
 

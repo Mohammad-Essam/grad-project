@@ -26,8 +26,9 @@ Route::post('/register', [Authentication::class, 'register']);
 Route::post('/login', [Authentication::class, 'login']);
 Route::post('/logout', [Authentication::class, 'logout']);
 
-//
+//get the posts of the user friends.
 Route::get('/posts', [PostController::class,'index']);
+
 Route::get('/posts/{id}', [PostController::class,'show']);
 Route::post('/posts', [PostController::class,'store']);
 Route::post('/posts/{id}', [PostController::class,'update']);

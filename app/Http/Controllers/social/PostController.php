@@ -19,7 +19,11 @@ class PostController extends Controller
     }
     public function index()
     {
-        //
+        $user = getCurrentUser();
+				$friendsID = $user->friends()->pluck('id');
+				$posts = Post::whereIn('user_id', $friendsID)->
+				orWhere('user_id',$user->id)->latest()->get();
+				return $posts;
     }
     /**
      * Store a newly created resource in storage.
@@ -29,9 +33,9 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-		$currentUser = getCurrentUser();
-		$post = $currentUser->createPost($request->caption,$request->content);
-		return response()->json(['success' => true, 'message' =>$post],201);
+			$currentUser = getCurrentUser();
+			$post = $currentUser->createPost($request->caption,$request->content);
+			return response()->json(['success' => true, 'message' =>$post],201);
     }
 
     /**
@@ -65,21 +69,27 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        //
+				$post = Post::find(1);
+				$post->delete();
+				return response()->json(['success' => true, 'message' =>"deleted succesfully"],201);
     }
 
     public function like(Post $post)
     {
-      // code...
+			$user = getCurrentUser();
+			$result = $user->likePost($post);
+			return $result;
     }
 
     public function unlike(Post $post)
     {
-      // code...
+			$user = getCurrentUser();
+			$result = $user->unLikePost($post);
+			return $result;
     }
     public function numberOfLikes(Post $post)
     {
-      // code...
+      return $post->likes()->count();
     }
 
 }

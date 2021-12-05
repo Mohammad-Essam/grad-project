@@ -19,7 +19,7 @@ class Friendships extends Migration
             $table->foreign('sender')->references('id')->on('users');
             $table->unsignedBigInteger('reciever');
             $table->foreign('reciever')->references('id')->on('users');
-			$table->integer('state')->default(0);
+			      $table->integer('state')->default(0);
             $table->timestamps();
         });
     }

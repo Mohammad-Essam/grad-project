@@ -27,7 +27,7 @@ class PostController extends Controller
 				$friendsID = $user->friends()->pluck('id');
 				$posts = Post::whereIn('user_id', $friendsID)->
 				orWhere('user_id',$user->id)->latest()->get();
-				return $posts;
+				return response()->json(['post' => $posts],200);
     }
     /**
      * Store a newly created resource in storage.
@@ -37,6 +37,7 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+			$request->validate(['caption'=>'required','content'=>'required']);
 			$currentUser = getCurrentUser();
 			$post = $currentUser->createPost($request->caption,$request->content);
 			return response()->json(['success' => true, 'message' =>$post],201);
@@ -53,10 +54,10 @@ class PostController extends Controller
 				if($post->user == $user)
 				{
 					$post->delete();
-					return response()->json(['success' => true, 'message' =>"deleted succesfully"],201);
+					return response()->json(['success' => true, 'message' =>"deleted succesfully"],200);
 				}
 				else
-				return response()->json(['success' => false, 'message' =>"cannot delete what isn't yours"]);
+				return response()->json(['success' => false, 'message' =>"cannot delete what isn't yours"],403);
     }
 
     public function like(Post $post)

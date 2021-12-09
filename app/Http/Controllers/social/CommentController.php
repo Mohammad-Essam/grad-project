@@ -15,7 +15,7 @@ class CommentController extends Controller
      */
     public function index(Post $post)
     {
-          return response()->json(['comments' => $post->comments]);
+          return response()->json(['comments' => $post->comments],200);
     }
     /**
      * Store a newly created resource in storage.
@@ -25,12 +25,13 @@ class CommentController extends Controller
      */
     public function store(Request $request, Post $post)
     {
+      $request->validate(['content'=>'required']);
       $user = getCurrentUser();
         $comment = Comment::create(['user_id' => $user->id,
           'post_id' => $post->id,
           'content' => $request->content
       ]);
-      return $comment;
+      return response()->json(['success'=>true,'comment'=>$comment],201);
     }
 
     /**

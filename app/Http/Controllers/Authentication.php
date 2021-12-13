@@ -15,12 +15,12 @@ class Authentication extends Controller
                     'email' => 'required|email|unique:users',
                     'password' => 'required|between:10,25']);
       $password = bcrypt($r->password);
-	  $api_token = Str::random(100);
+	    $api_token = Str::random(100);
       $user = User::create(['username'=>$r->username,
 							'password' =>$password,
 							'email' => $r->email,
 							'api_token' =>$api_token]);
-	return ['success' => true, 'message' => ['user data'=>$user, 'api_token'=>$api_token]];
+	    return response()->json(['success' => true, 'message' => ['user data'=>$user, 'api_token'=>$api_token]],201);
     }
 
     public function login(Request $r){
@@ -35,7 +35,7 @@ class Authentication extends Controller
         if($user && $password){
            $user->api_token = Str::random(100) ;
            $user->save();
-           return response()->json(['success' => true, "token"=>$user->api_token],201);
+           return response()->json(['success' => true, "api_token"=>$user->api_token],201);
         }
 
         else {
@@ -51,6 +51,6 @@ class Authentication extends Controller
             $user->save();
             return response()->json(['success'=>true,'message' =>'logout successfuly'] , 200);
         }
-		return ['message' => 'you are not logged in'];
+		return response()->json(['message' => 'you are not logged in'],200);
     }
 }

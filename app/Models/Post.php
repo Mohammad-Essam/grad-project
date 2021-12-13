@@ -25,10 +25,52 @@ class Post extends Model
     {
       return $this->belongsToMany(User::class, 'likes', 'post_id', 'user_id');
     }
+    public function numberOfLikes()
+    {
+      return $this->likes()->count();
+    }
 
+    public function getNumberOfLikesAttribute($value)
+    {
+        return $this->numberOfLikes();
+    }
+    public function getUsernameAttribute($value)
+    {
+        return $this->user->username;
+    }
+    public function getCommentsAttribute()
+    {
+        return $this->comments()->get();
+    }
+
+    public function getNumberOfCommentsAttribute($value)
+    {
+        return $this->comments()->count();
+    }
+    
+    public function getLikedAttribute($value)
+    {
+        $user = getCurrentUser();
+        if($user)
+        {
+          $result = $user->liked($this);
+          return $result;
+        }
+    }
+    
+    protected $appends = [
+      'number_of_likes',
+      'number_of_comments',
+      'username',
+      'comments',
+      'liked',
+    ];
     protected $fillable = [
       'caption',
       'content',
       'user_id'
+    ];
+    protected $hidden = [
+      'user',
     ];
 }

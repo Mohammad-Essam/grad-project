@@ -13,7 +13,8 @@ use App\Models\Comment;
 use App\Models\like;
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+  //use HasApiTokens,
+    use  HasFactory, Notifiable;
 
     public function createPost($caption, $content)
     {
@@ -36,6 +37,17 @@ class User extends Authenticatable
       if(!$res)
       {
         $like = Like::create(['user_id'=>$this->id,'post_id'=>$post->id]);
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+    public function liked(Post $post)
+    {
+      $res = Like::where('user_id',$this->id)->where('post_id',$post->id)->first();
+      if($res)
+      {
         return true;
       }
       else {
@@ -125,6 +137,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'api_token',
     ];
 
     /**

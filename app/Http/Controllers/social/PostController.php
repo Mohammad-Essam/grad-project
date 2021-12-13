@@ -63,22 +63,22 @@ class PostController extends Controller
     public function like(Post $post)
     {
 			$user = getCurrentUser();
-			$result = $user->likePost($post);
-			return $result;
+			$res = $user->likePost($post);
+			return response()->json(['success' => $res?true:false,
+			'message'=>$res?'you liked the post':'you already liked the post before'],$res?201:200);
     }
 
     public function unlike(Post $post)
     {
 			$user = getCurrentUser();
 			$result = $user->unLikePost($post);
-			return $result;
+			return response()->json(['success' => $res?true:false,
+			'message'=>$res?'you unliked the post':'you have not liked the post before to be able to unlike it'],$res?201:200);
     }
     public function numberOfLikes(Post $post)
     {
-      return $post->likes()->count();
+      return ['numberOfLikes' => $post->numberOfLikes()];
     }
-
-
 
 		    /**
 		     * Display the specified resource.
@@ -89,7 +89,7 @@ class PostController extends Controller
 		    public function show(Post $post)
 		    {
 		        $comments = $post->comments;
-						$NoLikes = $post->likes->count();
+						$NoLikes = $post->numberOfLikes();
 						return $post;
 		    }
 

@@ -48,6 +48,11 @@ class Post extends Model
         return $this->comments()->count();
     }
     
+    public function getUserAvatarAttribute($value)
+    {
+        return $this->user->avatar;
+    }
+    
     public function getLikedAttribute($value)
     {
         $user = getCurrentUser();
@@ -62,6 +67,7 @@ class Post extends Model
       'number_of_likes',
       'number_of_comments',
       'username',
+      'user_avatar',
       'comments',
       'liked',
     ];

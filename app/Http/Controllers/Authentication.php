@@ -38,9 +38,9 @@ class Authentication extends Controller
            return response()->json(['success' => true, "api_token"=>$user->api_token],201);
         }
 
-        else {
-          return response()->json(['success' => false, 'message' => 'invalid email or password'], 401);
-        }
+        // else {
+        //   return response()->json(['success' => false, 'message' => 'invalid email or password'], 401);
+        // }
     }
 
     public function logout(Request $r){

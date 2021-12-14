@@ -72,8 +72,8 @@ class PostController extends Controller
     {
 			$user = getCurrentUser();
 			$result = $user->unLikePost($post);
-			return response()->json(['success' => $res?true:false,
-			'message'=>$res?'you unliked the post':'you have not liked the post before to be able to unlike it'],$res?201:200);
+			return response()->json(['success' => $result?true:false,
+			'message'=>$result?'you unliked the post':'you have not liked the post before to be able to unlike it'],$result?201:200);
     }
     public function numberOfLikes(Post $post)
     {

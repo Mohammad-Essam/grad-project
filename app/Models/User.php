@@ -88,7 +88,7 @@ class User extends Authenticatable
     {
       $isFriend = DB::table('friendships')->where('sender',$this->id)
       ->where('reciever', $user->id)->first();
-      if(!$isFriend)
+      if(!$isFriend && $user != $this)
       {
         DB::table('friendships')->insert([
               'sender' => $this->id,
@@ -117,11 +117,21 @@ class User extends Authenticatable
     {
 
     }
+    
+    public function getPostsAttribute($value)
+    {
+        return $this->posts()->get();
+    }
+    public function getFriendsUsernameAttribute($value)
+    {
+        return $this->friends()->pluck('username');
+    }
     /**
      * The attributes that are mass assignable.
      *
      * @var string[]
      */
+
     protected $fillable = [
         'username',
         'email',
@@ -147,5 +157,9 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+    ];
+    protected $appends = [
+      'friends_username',
+   //   'posts',
     ];
 }

@@ -63,6 +63,10 @@ class Post extends Model
         }
     }
     
+    public function getLikesAttribute($value)
+    {
+        return $this->likes()->pluck('username');
+    }
     protected $appends = [
       'number_of_likes',
       'number_of_comments',
@@ -70,6 +74,7 @@ class Post extends Model
       'user_avatar',
       'comments',
       'liked',
+      'likes',
     ];
     protected $fillable = [
       'caption',

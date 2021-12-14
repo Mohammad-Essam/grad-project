@@ -18,9 +18,26 @@ class Comment extends Model
     {
       return $this->belongsTo(User::class);
     }
+    public function getUsernameAttribute($value)
+    {
+        return $this->user->username;
+    }
+    public function getUserAvatarAttribute($value)
+    {
+        return $this->user->avatar;
+    }
+    
     protected $fillable = [
       'content',
       'user_id',
       'post_id'
+    ];
+    protected $appends = [
+      'username',
+      'user_avatar',
+    ];
+    protected $hidden = [
+      'user',
+      'post',
     ];
 }

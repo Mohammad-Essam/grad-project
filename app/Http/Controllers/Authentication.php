@@ -30,17 +30,15 @@ class Authentication extends Controller
       ]);
 
         $user = User::where('email',$r->email)->orWhere('username',$r->email)->first();
-		    $password = Hash::check($r->password, $user->password);
+		if($user)$password = Hash::check($r->password, $user->password);
 
         if($user && $password){
            $user->api_token = Str::random(100) ;
            $user->save();
            return response()->json(['success' => true, "api_token"=>$user->api_token],201);
         }
-
-        // else {
-        //   return response()->json(['success' => false, 'message' => 'invalid email or password'], 401);
-        // }
+        else
+           return response()->json(['success' => false, 'message' => 'invalid email or password'], 401);
     }
 
     public function logout(Request $r){

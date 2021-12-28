@@ -27,7 +27,7 @@ class PostController extends Controller
 				$friendsID = $user->friends()->pluck('id');
 				$posts = Post::whereIn('user_id', $friendsID)->
 				orWhere('user_id',$user->id)->latest()->get();
-				return response()->json(['posts' => $posts],200);
+				return response()->json(['posts' => $posts],201);
     }
     /**
      * Store a newly created resource in storage.

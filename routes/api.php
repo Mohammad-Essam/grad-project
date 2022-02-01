@@ -5,6 +5,8 @@ use App\Http\Controllers\Authentication;
 use App\Http\Controllers\social\PostController;
 use App\Http\Controllers\social\CommentController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ExerciseController;
+use App\Http\Controllers\TrainingProgramController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,3 +57,30 @@ Route::post('/users/{user:username}/remove-friend',[UserController::class,'remov
 
 // Route::post('/post/{postId}/comments/{commentId}', [CommentController::class,'update']);
 // Route::delete('/post/{postId}/comments/{commentId}', [CommentController::class,'destroy']);
+
+//get all usernames 
+Route::get('/users',[UserController::class,'index']);
+
+
+
+//Exercises end-points
+Route::get('/exercises',[ExerciseController::class,'index']);
+Route::get('/exercises/names',[ExerciseController::class,'exercisesNames']);
+Route::post('/exercises',[ExerciseController::class,'store']);
+Route::get('/exercises/{exercise:name}',[ExerciseController::class,'show']);
+
+
+
+//Training programs end-points
+//all information about programs
+Route::get('/programs',[TrainingProgramController::class,'index']);
+
+//training programs names
+Route::get('/programs/names',[TrainingProgramController::class,'programsNames']);
+
+
+//to get specefic day workout
+Route::get('/programs/{trainingProgram:name}',[TrainingProgramController::class,'show']);
+
+//to get specefic day workout
+Route::get('/programs/{trainingProgram:name}/{day}',[TrainingProgramController::class,'day']);

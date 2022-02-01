@@ -10,7 +10,7 @@ use App\Models\Post;
 
 class PostController extends Controller
 {
-	  public function __construct()
+	public function __construct()
     {
         $this->middleware('EnsureTokenIsValid');
     }
@@ -37,7 +37,7 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-			$request->validate(['caption'=>'required','content'=>'required']);
+			$request->validate(['caption'=>'required']);
 			$currentUser = getCurrentUser();
 			$post = $currentUser->createPost($request->caption,$request->content);
 			return response()->json(['success' => true, 'message' =>$post],201);
@@ -86,11 +86,12 @@ class PostController extends Controller
 		     * @param  int  $id
 		     * @return \Illuminate\Http\Response
 		     */
+			//TODO: remove that things and replace it with accessor if needed.
 		    public function show(Post $post)
 		    {
 		        $comments = $post->comments;
-						$NoLikes = $post->numberOfLikes();
-						return $post;
+				$NoLikes = $post->numberOfLikes();
+				return $post;
 		    }
 
 		    // /**

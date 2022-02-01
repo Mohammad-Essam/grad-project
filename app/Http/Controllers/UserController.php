@@ -39,7 +39,7 @@ class UserController extends Controller
         
     public function index()
     {
-        //
+        return response()->json(['users'=>User::all()->pluck('username')],200);
     }
     
     public function destroy($id)

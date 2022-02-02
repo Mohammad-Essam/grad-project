@@ -37,9 +37,9 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-			$request->validate(['caption'=>'required']);
+			//$request->validate(['caption'=>'required']);
 			$currentUser = getCurrentUser();
-			$post = $currentUser->createPost($request->caption,$request->content);
+			$post = $currentUser->createPost($request->caption,$request->content,$request->type?intval($request->type):0);
 			return response()->json(['success' => true, 'message' =>$post],201);
     }
     /**

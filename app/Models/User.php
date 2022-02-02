@@ -16,11 +16,12 @@ class User extends Authenticatable
   //use HasApiTokens,
     use  HasFactory, Notifiable;
 
-    public function createPost($caption, $content)
+    public function createPost($caption, $content,$type)
     {
       $post = Post::create(['caption' => $caption,
                     'content'=> $content,
-                    'user_id'=>$this->id]);
+                    'user_id'=>$this->id,
+                    'type' => $type]);
         return $post;
     }
     //must be restricted to comment only on friends posts.

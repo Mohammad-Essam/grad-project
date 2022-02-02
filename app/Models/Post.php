@@ -79,7 +79,8 @@ class Post extends Model
     protected $fillable = [
       'caption',
       'content',
-      'user_id'
+      'user_id',
+      'type'
     ];
     protected $hidden = [
       'user',

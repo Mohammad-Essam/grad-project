@@ -20,6 +20,13 @@ class Authentication extends Controller
 							'password' =>$password,
 							'email' => $r->email,
 							'api_token' =>$api_token]);
+
+        //TODO: handle the avatar
+        if($r->avatar)
+        {
+            $user->avatar = $r->avatar;
+            $user->save();
+        } 
 	    return response()->json(['success' => true, 'message' => ['user data'=>$user, 'api_token'=>$api_token]],201);
     }
 

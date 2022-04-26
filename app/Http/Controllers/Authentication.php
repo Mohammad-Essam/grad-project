@@ -9,23 +9,32 @@ use Illuminate\Support\Facades\Hash;
 class Authentication extends Controller
 {
     //
+    public function update(Request $r)
+    {
+    }
+    
     public function register(Request $r)
     {
       $r->validate(['username' => 'required|min:3|max:20|string|unique:users',
                     'email' => 'required|email|unique:users',
                     'password' => 'required|between:10,25']);
       $password = bcrypt($r->password);
-	    $api_token = Str::random(100);
+      $api_token = Str::random(100);
       $user = User::create(['username'=>$r->username,
 							'password' =>$password,
 							'email' => $r->email,
 							'api_token' =>$api_token]);
 
-        //TODO: handle the avatar
-        if($r->avatar)
+    //     //TODO: handle the avatar
+        if($r->hasFile('avatar'))
         {
-            $user->avatar = $r->avatar;
-            $user->save();
+            // $filename =time().$r->file('avatar')->getClientOriginalName();
+            //  $path = $r->file('avatar')->storeAs('avatars',$filename,'public');            
+             $path = $r->file('avatar')->store('avatars');            
+             //$user->avatar = "storage/avatars/".$filename;
+             $user->avatar = $path;
+             $user->save();
+             return response()->json(["path"=>$user->avatar]);
         } 
 	    return response()->json(['success' => true, 'message' => ['user data'=>$user, 'api_token'=>$api_token]],201);
     }
@@ -57,5 +66,16 @@ class Authentication extends Controller
             return response()->json(['success'=>true,'message' =>'logout successfuly'] , 200);
         }
 		return response()->json(['message' => 'you are not logged in'],200);
+    }
+
+    public  function updateAvatar(Request $request)
+    {
+        $request->validate(['photo' => 'mimes:jpg,bmp,png,gif,jpeg']);
+        $user = getCurrentUser();
+        $path = $request->file('avatar')->store('avatars');
+        $user->avatar = $path;
+        $user->save();
+        return response()->json(['success' => true],201);
+
     }
 }

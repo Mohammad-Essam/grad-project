@@ -5,8 +5,9 @@ use App\Http\Controllers\Authentication;
 use App\Http\Controllers\social\PostController;
 use App\Http\Controllers\social\CommentController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\ExerciseController;
-use App\Http\Controllers\TrainingProgramController;
+use App\Http\Controllers\training\ExerciseController;
+use App\Http\Controllers\training\TrainingProgramController;
+use App\Http\Controllers\training\RecordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -75,12 +76,21 @@ Route::get('/exercises/{exercise:name}',[ExerciseController::class,'show']);
 //all information about programs
 Route::get('/programs',[TrainingProgramController::class,'index']);
 
+Route::post('/programs',[TrainingProgramController::class,'store'])->name('addProgram');
+
 //training programs names
 Route::get('/programs/names',[TrainingProgramController::class,'programsNames']);
 
 
-//to get specefic day workout
+//to get specefic workout
 Route::get('/programs/{trainingProgram:name}',[TrainingProgramController::class,'show']);
+
+//to put exercises on specefic program
+//name  sets reps order day
+Route::post('/programs/{trainingProgram}',[TrainingProgramController::class,'storeExercises']);
+
 
 //to get specefic day workout
 Route::get('/programs/{trainingProgram:name}/{day}',[TrainingProgramController::class,'day']);
+
+Route::post('records/exercises',[RecordController::class,'store']);

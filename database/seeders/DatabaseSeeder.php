@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use UserHasBadge;
 
 class DatabaseSeeder extends Seeder
 {
@@ -19,6 +20,9 @@ class DatabaseSeeder extends Seeder
             ExerciseSeeder::class,
             ProgramSeeder::class,
             ProgramExercicesSeeder::class,
+            BadgeSeeder::class,
+            RuleSeeder::class,
+            UserHasBadgeSeeder::class,
         ]);
     }
 }

@@ -84,5 +84,6 @@ class Post extends Model
     ];
     protected $hidden = [
       'user',
+      'pivot',
     ];
 }

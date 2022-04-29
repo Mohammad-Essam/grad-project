@@ -10,8 +10,11 @@ class Record extends Model
     use HasFactory;
     protected $fillable =[
         'user_id',
-        'exercise_id',
+        'exercise_name',
         'count',
         'duration'
+    ];
+    protected $hidden = [
+        'id',
     ];
 }

@@ -2,6 +2,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Authentication;
+use App\Http\Controllers\badges\BadgeController;
 use App\Http\Controllers\social\PostController;
 use App\Http\Controllers\social\CommentController;
 use App\Http\Controllers\UserController;
@@ -93,4 +94,16 @@ Route::post('/programs/{trainingProgram}',[TrainingProgramController::class,'sto
 //to get specefic day workout
 Route::get('/programs/{trainingProgram:name}/{day}',[TrainingProgramController::class,'day']);
 
-Route::post('records/exercises',[RecordController::class,'store']);
+Route::get('/records/exercises',[RecordController::class,'index']);
+Route::post('/records/exercises',[RecordController::class,'store']);
+
+
+
+
+Route::get('/badges',[BadgeController::class,'index']);
+Route::post('/badges',[BadgeController::class,'store']);
+Route::post('/badges/{name}',[BadgeController::class,'storeRule']);
+Route::get('/badges/{name}',[BadgeController::class,'show']);
+Route::post('/badges/{name}/delete',[BadgeController::class,'destroy']);
+
+

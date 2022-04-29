@@ -10,6 +10,8 @@ class Exercise extends Model
     use HasFactory;
     protected $primaryKey = 'name';
     public $incrementing = false;
+    protected $keyType = 'string';
+
     protected $fillable =[
         'name',
         'description',

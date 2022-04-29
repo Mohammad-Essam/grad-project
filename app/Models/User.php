@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\badges\Badge;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,6 +12,8 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Models\Post;
 use App\Models\Comment;
 use App\Models\like;
+use App\Models\training\Record;
+
 class User extends Authenticatable
 {
   //use HasApiTokens,
@@ -114,6 +117,23 @@ class User extends Authenticatable
         return false;
       }
     }
+
+    public function badges()
+    {
+      return $this->belongsToMany(Badge::class, 'user_has_badges', 'user_id', 'badge_name');
+    }
+    public function getBadgesAttribute($value)
+    {
+        return $this->badges()->get()->makeHidden('rules');
+    }
+
+    
+    public function exercised()
+    {
+      return $this->hasMany(Record::class);
+    }
+
+
     public function acceptFriendRequest()
     {
 
@@ -138,7 +158,7 @@ class User extends Authenticatable
         'email',
         'password',
         'api_token',
-        'type'
+        'role'
     ];
 
     /**
@@ -162,6 +182,7 @@ class User extends Authenticatable
     ];
     protected $appends = [
       'friends_username',
-   //   'posts',
+      'posts',
+      'badges',
     ];
 }

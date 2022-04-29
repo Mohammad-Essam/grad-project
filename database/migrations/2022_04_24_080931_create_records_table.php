@@ -17,8 +17,8 @@ class CreateRecordsTable extends Migration
             $table->id();
             $table->unsignedBigInteger("user_id");
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string("excercise_name");
-            $table->foreign('excercise_name')->references('name')->on('exercises')->onDelete('cascade');
+            $table->string("exercise_name");
+            $table->foreign('exercise_name')->references('name')->on('exercises')->onDelete('cascade');
             $table->integer("count");
             $table->integer("duration");
             $table->timestamps();

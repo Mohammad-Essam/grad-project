@@ -20,6 +20,7 @@ class UserSeeder extends Seeder
             'username' => "admin",
             'email' => 'admin@gmail.com',
             'role' => 2,
+            'avatar' => 'avatars\admin.png',
             'password' => Hash::make('admin')]);
         $admin->api_token = "admin";
         $admin->save();
@@ -33,6 +34,7 @@ class UserSeeder extends Seeder
         $hady = User::create(
             ['username' => "hady",
             'email' => 'hady@gmail.com',
+            'avatar' => 'avatars\hady.jpg',
             'password' => Hash::make('hady')]);
         $hady->api_token ="hady";
         $hady->save();

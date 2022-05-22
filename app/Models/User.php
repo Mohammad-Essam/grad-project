@@ -147,6 +147,15 @@ class User extends Authenticatable
     {
         return $this->friends()->pluck('username');
     }
+    public function getLevelAttribute($value)
+    {
+        return intval($this->exp / 1000);
+    }
+    public function getToReachNextLevelAttribute($value)
+    {
+        return intval( 1000 - ($this->exp % 1000));
+    }
+
     /**
      * The attributes that are mass assignable.
      *
@@ -184,5 +193,7 @@ class User extends Authenticatable
       'friends_username',
       'posts',
       'badges',
+      'level',
+      'to_reach_next_level'
     ];
 }

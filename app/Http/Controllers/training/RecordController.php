@@ -5,6 +5,7 @@ namespace App\Http\Controllers\training;
 use App\Http\Controllers\Controller;
 use App\Models\badges\Badge;
 use App\Models\training\Exercise;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\training\Record;
 use Illuminate\Support\Facades\DB;
@@ -21,13 +22,17 @@ class RecordController extends Controller
 			$request->validate(['exercise_name'=>'required|exists:exercises,name',
             'count'=>'required','duration'=>'required']);
 			$currentUser = getCurrentUser();
-            $exercise_name = Exercise::where('name',$request->exercise_name)->first()->name;
+            $exercise = Exercise::where('name',$request->exercise_name)->first();
+            $exercise_name = $exercise->name;
             $record = Record::create(['exercise_name'=>$exercise_name,
                                         'duration' => intval($request->duration),
                                         'count' => intval($request->count),
                                         'user_id' => $currentUser->id]
                                     );
             $currentUser = getCurrentUser();
+            $currentUser->exp += $exercise->exp * intval($request->count);
+            $currentUser->save();
+            
             $exercised = $currentUser->exercised()
                 ->select('exercise_name','count','duration')->get()
                 ->groupBy('exercise_name')

@@ -59,7 +59,7 @@ class TrainingProgramController extends Controller
             'sets'=>'required',
             'day'=>'required']);
 
-        $workout = DB::table("program_has_exercise")->insert([
+        $workout = DB::table("program_has_exercises")->insert([
             [
                 'program_id'=>$program->id,
                 'exercise_name'=>$request->name,

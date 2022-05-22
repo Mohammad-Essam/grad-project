@@ -39,7 +39,7 @@ class ExerciseController extends Controller
             'description'=>'required','exp'=>'required' ]);
 			$currentUser = getCurrentUser();
             if($request->hasFile('video'))
-             $path = $request->file('video')->store('media/exercises');
+             $path = $request->file('video')->store('media/exercises','public');
 
              $exercise = Exercise::create(['name'=>$request->name,
                                             'video'=>$path,

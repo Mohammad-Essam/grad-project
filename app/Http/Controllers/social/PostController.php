@@ -44,7 +44,7 @@ class PostController extends Controller
 		if($request->hasFile('content'))
         {
             // $filename =time().$request->file('content')->getClientOriginalName();
-			$path = $request->file('content')->store('media/posts');
+			$path = $request->file('content')->store('media/posts','public');
         }
 		$post = $currentUser->createPost($request->caption,$path?$path:$request->content,$request->type?intval($request->type):0);
 		return response()->json(['success' => true, 'message' =>$post],201);

@@ -30,11 +30,11 @@ class Authentication extends Controller
         {
             // $filename =time().$r->file('avatar')->getClientOriginalName();
             //  $path = $r->file('avatar')->storeAs('avatars',$filename,'public');            
-             $path = $r->file('avatar')->store('avatars');            
+             $path = $r->file('avatar')->store('avatars','public');            
              //$user->avatar = "storage/avatars/".$filename;
              $user->avatar = $path;
              $user->save();
-             return response()->json(["path"=>$user->avatar]);
+            //  return response()->json(["path"=>$user->avatar]);
         } 
 	    return response()->json(['success' => true, 'message' => ['user_data'=>$user, 'api_token'=>$api_token]],201);
     }
@@ -72,10 +72,11 @@ class Authentication extends Controller
     {
         $request->validate(['photo' => 'mimes:jpg,bmp,png,gif,jpeg']);
         $user = getCurrentUser();
-        $path = $request->file('avatar')->store('avatars');
+        $path = $request->file('avatar')->store('avatars','public');
         $user->avatar = $path;
         $user->save();
         return response()->json(['success' => true],201);
 
     }
+    
 }

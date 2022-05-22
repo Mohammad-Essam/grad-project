@@ -27,7 +27,7 @@ class BadgeController extends Controller
             'image'=>'required|mimes:png,jpg,jpeg,gif',
     ]);
     if($request->hasFile('image'))
-     $path = $request->file('image')->store('media/badges');
+     $path = $request->file('image')->store('media/badges','public');
 
         $badge = Badge::create(['name'=>$request->name,
         'image'=>$path,

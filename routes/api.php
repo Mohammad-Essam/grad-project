@@ -5,6 +5,7 @@ use App\Http\Controllers\Authentication;
 use App\Http\Controllers\badges\BadgeController;
 use App\Http\Controllers\social\PostController;
 use App\Http\Controllers\social\CommentController;
+use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\training\ExerciseController;
 use App\Http\Controllers\training\TrainingProgramController;
@@ -20,6 +21,11 @@ use App\Http\Controllers\training\RecordController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+//for testing purpose only
+Route::post('/test',[TestController::class,'storeInPublic']);
+
+
+
 
 //register, login and logout
 Route::post('/register', [Authentication::class, 'register']);

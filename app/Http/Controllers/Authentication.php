@@ -36,7 +36,7 @@ class Authentication extends Controller
              $user->save();
              return response()->json(["path"=>$user->avatar]);
         } 
-	    return response()->json(['success' => true, 'message' => ['user data'=>$user, 'api_token'=>$api_token]],201);
+	    return response()->json(['success' => true, 'message' => ['user_data'=>$user, 'api_token'=>$api_token]],201);
     }
 
     public function login(Request $r){

@@ -79,7 +79,7 @@ class RecordController extends Controller
             }
             
             if($c>0)
-                return response()->json(['success' => true, 'message' => $record,'granted badges' => $badges],201);
+                return response()->json(['success' => true, 'message' => $record,'granted_badges' => $badges],201);
             else
 			    return response()->json(['success' => true, 'message' => $record],201);
     }

@@ -74,17 +74,28 @@ class Authentication extends Controller
 
     public  function updateAvatar(Request $request)
     {
-        $request->validate(['avatar' => 'required|mimes:jpg,bmp,png,gif,jpeg']);
+        $flag = false;
         $user = getCurrentUser();
-        $path = $request->file('avatar')->store('avatars','public');
-        $user->avatar = $path;
+        if($request->has('avatar'))
+        {
+            $request->validate(['avatar' => 'required|mimes:jpg,bmp,png,gif,jpeg']);
+            $path = $request->file('avatar')->store('avatars','public');
+            $user->avatar = $path;
+            $flag = true;
+        }
         if($request->has('password'))
         {
             $password = bcrypt($request->password);
             $user->password = $password;
+            $flag = true;
         }
-        $user->save();
-        return response()->json(['success'=>true,'message' => "profile iformation has been updated"],201);
+        if($flag)
+        {
+            $user->save();
+            return response()->json(['success'=>true,'message' => "profile iformation has been updated"],201);
+        }
+        else
+            return response()->json(['success'=>true,'message' => "there is no change to be updated"],200);
 
     }
     

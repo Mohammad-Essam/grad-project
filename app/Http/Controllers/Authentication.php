@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Hash;
 class Authentication extends Controller
 {
     //
+    public function __construct() {
+        $this->middleware('EnsureTokenIsValid')->only('updateAvatar');
+    }
+    
     public function update(Request $r)
     {
     }
@@ -70,12 +74,17 @@ class Authentication extends Controller
 
     public  function updateAvatar(Request $request)
     {
-        $request->validate(['photo' => 'mimes:jpg,bmp,png,gif,jpeg']);
+        $request->validate(['avatar' => 'required|mimes:jpg,bmp,png,gif,jpeg']);
         $user = getCurrentUser();
         $path = $request->file('avatar')->store('avatars','public');
         $user->avatar = $path;
+        if($request->has('password'))
+        {
+            $password = bcrypt($request->password);
+            $user->password = $password;
+        }
         $user->save();
-        return response()->json(['success' => true],201);
+        return response()->json(['success'=>true,'message' => "profile iformation has been updated"],201);
 
     }
     

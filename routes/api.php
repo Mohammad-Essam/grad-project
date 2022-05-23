@@ -3,6 +3,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Authentication;
 use App\Http\Controllers\badges\BadgeController;
+use App\Http\Controllers\ChallengeController;
 use App\Http\Controllers\social\PostController;
 use App\Http\Controllers\social\CommentController;
 use App\Http\Controllers\TestController;
@@ -31,6 +32,7 @@ Route::post('/test',[TestController::class,'storeInPublic']);
 Route::post('/register', [Authentication::class, 'register']);
 Route::post('/login', [Authentication::class, 'login']);
 Route::post('/logout', [Authentication::class, 'logout']);
+Route::post('/update', [Authentication::class, 'updateAvatar']);
 
 
 //get the posts of the user friends.
@@ -113,3 +115,5 @@ Route::get('/badges/{name}',[BadgeController::class,'show']);
 Route::post('/badges/{name}/delete',[BadgeController::class,'destroy']);
 
 
+//request a comptitation
+Route::post('/compete',[ChallengeController::class,'store']);

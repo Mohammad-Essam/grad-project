@@ -67,6 +67,11 @@ class Post extends Model
     {
         return $this->likes()->pluck('username');
     }
+    public function getUserLevelAttribute($value)
+    {
+        return $this->user->level;
+    }
+    
     protected $appends = [
       'number_of_likes',
       'number_of_comments',
@@ -75,6 +80,7 @@ class Post extends Model
       'comments',
       'liked',
       'likes',
+      'user_level'
     ];
     protected $fillable = [
       'caption',

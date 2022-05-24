@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\comptitive\Challenge;
+use App\Models\training\Record;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -86,6 +87,9 @@ class ChallengeController extends Controller
     {
         $challenge = Challenge::where('id',$challenge_id)->first();
         $currentUser = getCurrentUser();
+        if(!$challenge)
+        return response()->json(['success'=>false,'message'=>'no challenge with that id'],404);
+
         $win = false;
         if($challenge->state == 1)
         {
@@ -119,11 +123,51 @@ class ChallengeController extends Controller
                 $challenge -> save();
                 $win = true;
             }
+            if($win)
+            {
+                //TODO: remove the 60 and put something real;
+                $record = Record::create(['exercise_name'=>$challenge->exercise_name,
+                                        'duration' => 60,
+                                        'count' => intval($challenge->player_one_score),
+                                        'user_id' => $challenge->player_one_id]
+                                    );
+                $record = Record::create(['exercise_name'=>$challenge->exercise_name,
+                'duration' => 60,
+                'count' => intval($challenge->player_two_score),
+                'user_id' => $challenge->player_two_id]
+            );
+            
+        
+            }
         }
 
         return response()->json(['state'=>$challenge->state,'winner'=>$challenge->winner_username],201);
     }
-    
+    public function show($challenge_id)
+    {
+        $opponenetName = null;
+        $opponentScore = 0;
+        $challenge = Challenge::where('id',$challenge_id)->first();
+        if(!$challenge)
+        return response()->json(['success'=>false,'message'=>'no challenge with that id'],404);
+
+        $currentUser = getCurrentUser();
+
+        if($challenge->player_one_id == $currentUser->id)
+        {
+            $opponenetName = $challenge->playerTwo->username;
+            $opponentScore = $challenge->player_two_score;
+        }
+
+        if($challenge->player_two_id == $currentUser->id)
+        {
+            $opponenetName = $challenge->playerOne->username;
+            $opponentScore = $challenge->player_one_score;
+        }
+
+        return response()->json(['state'=>$challenge->state,'winner'=>$challenge->winner_username,
+        'opponent_name'=>$opponenetName, 'opponent_score' => $opponentScore],201);
+    }
     /**
      * Show the form for editing the specified resource.
      *

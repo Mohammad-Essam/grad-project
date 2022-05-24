@@ -19,9 +19,12 @@ class ChallengeController extends Controller
         $this->middleware('EnsureTokenIsValid');
     }
 
+    //TODO: prevent my challenges from appearing to me
     public function index()
     {
-        return response()->json(Challenge::class);
+        $currentUser = getCurrentUser();
+        $challenges = Challenge::where('player_one_id','!=',$currentUser->id)->where('state',0)->get();
+        return response()->json(['challenges'=>$challenges]);
     }
 
     /**
@@ -64,12 +67,22 @@ class ChallengeController extends Controller
      */
     public function accept($challenge_id)
     {
+        $currentUser = getCurrentUser();
         $challenge = Challenge::where('id',$challenge_id)->first();
+        if(!$challenge)
+        return response()->json(['success'=>false,'message'=>'no challenge with that id'],404);
+
+        if($challenge->player_one_id == $currentUser->id)
+        {
+            return response()->json(['success'=>false,'message'=>'you cant accept your own challenge'],401);
+        }
         $challenge->state = 1;
+        $challenge->player_two_id = $currentUser->id;
         $challenge->save();
+        return response()->json(['success'=>true,'message'=>'accepted successfully'],201);
     }
 
-    public function storeScore($challenge_id)
+    public function incrementScore($challenge_id)
     {
         $challenge = Challenge::where('id',$challenge_id)->first();
         $currentUser = getCurrentUser();
@@ -92,19 +105,23 @@ class ChallengeController extends Controller
             if($challenge->player_one_score >= $challenge->reps)
             {
                 $challenge->state = 2;
-                $challenge->save();    
                 $challenge->winner_username = User::where('id',$challenge->player_one_id)->first()->username;
+                $challenge->save();    
+                
+                
                 $win = true;
             }
 
             if($challenge->player_two_score >= $challenge->reps)
             {
                 $challenge -> state = 2;
-                $challenge -> save();
                 $challenge->winner_username = User::where('id',$challenge->player_two_id)->first()->username;
+                $challenge -> save();
                 $win = true;
             }
         }
+
+        return response()->json(['state'=>$challenge->state,'winner'=>$challenge->winner_username],201);
     }
     
     /**

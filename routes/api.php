@@ -119,3 +119,4 @@ Route::post('/badges/{name}/delete',[BadgeController::class,'destroy']);
 Route::get('/challenges',[ChallengeController::class,'index']);
 Route::post('/challenges',[ChallengeController::class,'store']);
 Route::post('/challenges/{challenge_id}/',[ChallengeController::class,'accept']);
+Route::post('/challenges/{challenge_id}/increment',[ChallengeController::class,'incrementScore']);

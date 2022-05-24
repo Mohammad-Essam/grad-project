@@ -43,7 +43,7 @@ class PostController extends Controller
 		$path = null;
 		if($request->hasFile('content'))
         {
-			$request->validate(['content'=>'mimes:png,jpg,jpeg,gif,mp4,mpeg,avi,mov']);
+			$request->validate(['content'=>'mimes:png,jpg,jpeg,gif,mp4,mpeg,avi,mov,flv,m4v']);
 			$path = $request->file('content')->store('media/posts','public');
         }
 		$post = $currentUser->createPost($request->caption,$path?$path:$request->content,$request->type?intval($request->type):0);

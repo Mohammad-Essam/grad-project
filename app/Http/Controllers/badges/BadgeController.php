@@ -77,4 +77,14 @@ class BadgeController extends Controller
         $badge->delete();
         return response()->json(['message'=>'deleted successfully'],201);
     }
+    public function share($name)
+    {
+        $badge = Badge::where('name',$name)->first();
+        if(!$badge)
+            return response()->json(['message'=>'no badge with this name'],404);
+        $currentUser = getCurrentUser();
+        $post = $currentUser->createPost('earned: "' . $name.'" badge' ,$badge->image,2);
+        return response()->json(['message'=>'badge shared succesfully'],201);
+    }
+    
 }

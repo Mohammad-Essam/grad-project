@@ -141,11 +141,11 @@ class ChallengeController extends Controller
             }
         }
 
-        return response()->json(['state'=>$challenge->state,'winner'=>$challenge->winner_username],201);
+        return response()->json(['state'=>$challenge->state,'winner'=>$challenge->winner_username?$challenge->winner_username:""],201);
     }
     public function show($challenge_id)
     {
-        $opponenetName = null;
+        $opponenetName = "";
         $opponentScore = 0;
         $challenge = Challenge::where('id',$challenge_id)->first();
         if(!$challenge)

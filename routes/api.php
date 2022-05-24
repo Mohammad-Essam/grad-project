@@ -112,6 +112,8 @@ Route::get('/badges',[BadgeController::class,'index']);
 Route::post('/badges',[BadgeController::class,'store']);
 Route::post('/badges/{name}',[BadgeController::class,'storeRule']);
 Route::get('/badges/{name}',[BadgeController::class,'show']);
+Route::post('/badges/{name}/share',[BadgeController::class,'share']);
+
 Route::post('/badges/{name}/delete',[BadgeController::class,'destroy']);
 
 

@@ -26,10 +26,10 @@ class CreateChallengesTable extends Migration
             $table->foreign('player_one_id')->references('id')->on('users')->onDelete('cascade');
             $table->integer('player_one_score')->default(0);
 
-            $table->unsignedBigInteger('player_two_id')->nullable();
+            $table->unsignedBigInteger('player_two_id')->default(0);
             // $table->foreign('player_two_id')->references('id')->on('users')->onDelete('cascade');
             $table->integer('player_two_score')->default(0);
-            $table->string('winner_username')->nullable();
+            $table->string('winner_username')->default("");
         });
     }
 

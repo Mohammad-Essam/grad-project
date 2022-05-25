@@ -143,8 +143,87 @@ class ChallengeController extends Controller
 
         return response()->json(['state'=>$challenge->state,'winner'=>$challenge->winner_username?$challenge->winner_username:""],201);
     }
+
+    
+    public function increase($challenge_id)
+    {
+        $challenge = Challenge::where('id',$challenge_id)->first();
+        $currentUser = getCurrentUser();
+        if(!$challenge)
+        return response()->json(['success'=>false,'message'=>'no challenge with that id'],404);
+        $opponenetName = "";
+        $opponentScore = 0;
+        $myScore = 0;
+        $myUsername = "";
+        $win = false;
+        if($challenge->state == 1)
+        {
+            //increase by one.
+            if($challenge->player_one_id == $currentUser->id)
+            {
+                $challenge->player_one_score += 1;
+                $challenge->save();
+                $opponenetName = $challenge->playerTwo->username;
+                $opponentScore = $challenge->player_two_score;
+                $myScore = $challenge->player_one_score;
+                $myUsername = $challenge->playerOne->username;
+            }
+
+            if($challenge->player_two_id == $currentUser->id)
+            {
+                $challenge->player_two_score += 1;
+                $challenge->save();
+                $opponenetName = $challenge->playerOne->username;
+                $opponentScore = $challenge->player_one_score;
+                $myScore = $challenge->player_two_score;
+                $myUsername = $challenge->playerTwo->username;
+            }
+
+            if($challenge->player_one_score >= $challenge->reps)
+            {
+                $challenge->state = 2;
+                $challenge->winner_username = User::where('id',$challenge->player_one_id)->first()->username;
+                $challenge->save();    
+                
+                
+                $win = true;
+            }
+
+            if($challenge->player_two_score >= $challenge->reps)
+            {
+                $challenge -> state = 2;
+                $challenge->winner_username = User::where('id',$challenge->player_two_id)->first()->username;
+                $challenge -> save();
+                $win = true;
+            }
+            if($win)
+            {
+                //TODO: remove the 60 and put something real;
+                $record = Record::create(['exercise_name'=>$challenge->exercise_name,
+                                        'duration' => 60,
+                                        'count' => intval($challenge->player_one_score),
+                                        'user_id' => $challenge->player_one_id]
+                                    );
+                $record = Record::create(['exercise_name'=>$challenge->exercise_name,
+                'duration' => 60,
+                'count' => intval($challenge->player_two_score),
+                'user_id' => $challenge->player_two_id]
+            );
+            
+        
+            }
+        }
+
+        return response()->json(['state'=>$challenge->state,'winner'=>$challenge->winner_username?$challenge->winner_username:"",
+        'opponent_name'=>$opponenetName, 'opponent_score' => $opponentScore,
+        'my_username' => $myUsername, 'my_score' => $myScore],201);
+    }
+
+
     public function show($challenge_id)
     {
+        $myScore = 0;
+        $myUsername = "";
         $opponenetName = "";
         $opponentScore = 0;
         $challenge = Challenge::where('id',$challenge_id)->first();
@@ -157,16 +236,21 @@ class ChallengeController extends Controller
         {
             $opponenetName = $challenge->playerTwo->username;
             $opponentScore = $challenge->player_two_score;
+            $myScore = $challenge->player_one_score;
+            $myUsername = $challenge->playerOne->username;
         }
 
         if($challenge->player_two_id == $currentUser->id)
         {
             $opponenetName = $challenge->playerOne->username;
             $opponentScore = $challenge->player_one_score;
+            $myScore = $challenge->player_two_score;
+            $myUsername = $challenge->playerTwo->username;
         }
 
         return response()->json(['state'=>$challenge->state,'winner'=>$challenge->winner_username,
-        'opponent_name'=>$opponenetName, 'opponent_score' => $opponentScore],201);
+        'opponent_name'=>$opponenetName, 'opponent_score' => $opponentScore,
+        'my_username' => $myUsername, 'my_score' => $myScore],201);
     }
     /**
      * Show the form for editing the specified resource.

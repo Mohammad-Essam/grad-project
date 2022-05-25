@@ -52,12 +52,12 @@ class ChallengeController extends Controller
             'reps'=>'required',
         ]);
         $currentUser = getCurrentUser();
-        Challenge::create([
+        $challenge = Challenge::create([
             'exercise_name' => $request->exercise_name,
             'reps' => $request->reps,
             'player_one_id' => $currentUser->id,
         ]);
-        return response()->json(['status' => true,'message'=>'wait for an oponent'],201);
+        return response()->json(['status' => true,'message'=>'wait for an oponent','id'=>$challenge->id],201);
     }
 
     /**

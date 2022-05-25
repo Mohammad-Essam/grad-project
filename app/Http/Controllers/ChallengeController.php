@@ -145,7 +145,7 @@ class ChallengeController extends Controller
     }
 
     
-    public function increase($challenge_id)
+    public function increase($challenge_id,Request $request)
     {
         $challenge = Challenge::where('id',$challenge_id)->first();
         $currentUser = getCurrentUser();
@@ -161,7 +161,7 @@ class ChallengeController extends Controller
             //increase by one.
             if($challenge->player_one_id == $currentUser->id)
             {
-                $challenge->player_one_score += 1;
+                $challenge->player_one_score += $request->score;
                 $challenge->save();
                 $opponenetName = $challenge->playerTwo->username;
                 $opponentScore = $challenge->player_two_score;
@@ -171,7 +171,7 @@ class ChallengeController extends Controller
 
             if($challenge->player_two_id == $currentUser->id)
             {
-                $challenge->player_two_score += 1;
+                $challenge->player_two_score += $request->score;
                 $challenge->save();
                 $opponenetName = $challenge->playerOne->username;
                 $opponentScore = $challenge->player_one_score;
@@ -209,11 +209,26 @@ class ChallengeController extends Controller
                 'count' => intval($challenge->player_two_score),
                 'user_id' => $challenge->player_two_id]
             );
-            
-        
             }
         }
-
+        if($challenge->state == 2)
+        {
+            if($challenge->player_one_id == $currentUser->id)
+            {
+                $opponenetName = $challenge->playerTwo->username;
+                $opponentScore = $challenge->player_two_score;
+                $myScore = $challenge->player_one_score;
+                $myUsername = $challenge->playerOne->username;
+            }
+    
+            if($challenge->player_two_id == $currentUser->id)
+            {
+                $opponenetName = $challenge->playerOne->username;
+                $opponentScore = $challenge->player_one_score;
+                $myScore = $challenge->player_two_score;
+                $myUsername = $challenge->playerTwo->username;
+            }
+        }
         return response()->json(['state'=>$challenge->state,'winner'=>$challenge->winner_username?$challenge->winner_username:"",
         'opponent_name'=>$opponenetName, 'opponent_score' => $opponentScore,
         'my_username' => $myUsername, 'my_score' => $myScore],201);
